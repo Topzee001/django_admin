@@ -29,7 +29,9 @@ SECRET_KEY = 'django-insecure--h)g@lil=)6da(pv7+!7m%r@)t=^k=a45bywawlggzdh3xhayv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['topzee.pythonanywhere.com']
+ALLOWED_HOSTS = [
+    # 'topzee.pythonanywhere.com'
+    ]
 
 
 # Application definition
@@ -41,8 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'book_store.apps.BookStoreConfig',
-    'book_store',
+    'book_store.apps.BookStoreConfig',
+    # 'book_store',
 ]
 
 MIDDLEWARE = [
@@ -79,16 +81,17 @@ WSGI_APPLICATION = 'first_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'topzee$default',
-        'USER': 'topzee',
-        'PASSWORD': 'your_db_password',  # You set this on PythonAnywhere
-        'HOST': 'topzee.mysql.pythonanywhere-services.com',
-        'PORT': '3306',
-    }
-}
+# python anywhere db config
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'topzee$default',
+#         'USER': 'topzee',
+#         'PASSWORD': 'your_db_password',  # You set this on PythonAnywhere
+#         'HOST': 'topzee.mysql.pythonanywhere-services.com',
+#         'PORT': '3306',
+#     }
+# }
 
 # DATABASES = {
 #     'default': {
@@ -101,16 +104,16 @@ DATABASES = {
 #     }
 # }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': os.getenv('DB_NAME'),
-#         'USER': os.getenv('DB_USER'),
-#         'PASSWORD': os.getenv('DB_PASSWORD'),
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
 
 
 
