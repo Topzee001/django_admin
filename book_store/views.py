@@ -5,6 +5,8 @@ from .models import Book
 # import for class-based view
 from django.views.generic import TemplateView, DetailView, UpdateView
 from django.urls import reverse_lazy
+# passing view to template
+from django.shortcuts import render
 
 def intro(request):
     return HttpResponse("welcome to my book store.")
@@ -49,3 +51,21 @@ class BookUpdateView(UpdateView):
     # Perform additional actions after successful update (e.g., send notifications)
              return response
     
+# practice exercise for views and url
+# Create a function-based view that displays a simple message
+
+def task(request):
+     return HttpResponse("this is just what's needed from the task")
+
+# Implement a class-based view that renders a template
+class greeting(TemplateView):
+    #  ensure to provide proper template directory location
+     template_name = 'book/greeting.html'
+
+# template task 
+def home(request):
+    context = {
+        'name': 'Temitope',
+        'items': ['Django', 'Python', 'Flutter']
+    }
+    return render(request, 'home.html', context)

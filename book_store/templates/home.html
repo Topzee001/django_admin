@@ -1,0 +1,14 @@
+<!-- home.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>This is the homepage</h2>
+<p>Welcome to the homepage. We're glad you're here!</p>
+{% endblock %}
+
+<p>Hello, {{ name|upper }}!</p>
+<ul>
+    {% for item in items %}
+        <li>{{ item }}</li>
+    {% endfor %}
+</ul>
