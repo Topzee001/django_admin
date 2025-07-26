@@ -1,12 +1,18 @@
+from django.contrib import messages
 from django.http import HttpResponse
 # imports for function-based view
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from .models import Book
 # import for class-based view
 from django.views.generic import TemplateView, DetailView, UpdateView
 from django.urls import reverse_lazy
 # passing view to template
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+# signup view imports
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
 
 def intro(request):
     return HttpResponse("welcome to my book store.")
@@ -69,3 +75,39 @@ def home(request):
         'items': ['Django', 'Python', 'Flutter']
     }
     return render(request, 'home.html', context)
+
+@login_required
+def profile_view(request):
+    #  this view can only be accessed by authenticated users
+    return render(request, 'accounts/profile.html')
+
+
+# class ProfileView(LoginRequiredMixin, TemplateView):
+#  # A protected view that displays the user's profile page, class based, fxn based above
+#     template_name = 'accounts/profile.html'
+
+
+# signup view
+# authentication class
+class SignUpView(CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name= 'registration/signup.html'
+
+    def form_valid(self, form):
+        messages.success(self.request, "Account created successfully! You can now log in.")
+        return super().form_valid(form)
+
+#  user registration
+
+def register(request):
+     if request.method == 'POST':
+          form = UserCreationForm(request.POST)
+          if form.is_valid():
+               form.save()
+               return redirect('login') # redirect after successful registration
+     else:
+          form = UserCreationForm()
+     return render(request, 'registration/register.html', {'form': form})
+
+

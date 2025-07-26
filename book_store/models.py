@@ -1,4 +1,8 @@
 from django.db import models
+from django.views.generic import CreateView
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+
 
 # Create your models here.
 
@@ -22,6 +26,11 @@ class Employee(models.Model):
 # 2. using OneToOneField
 class Product(models.Model):
     name= models.CharField(max_length=100)
+
+    class Meta:
+        permissions = [
+            ("can_publish_product", "can publish product")
+        ]
 
     def __str__(self):
         return self.name
@@ -105,3 +114,4 @@ class Book(models.Model):
 
 #     def __str__(self):
 #         return self.name
+

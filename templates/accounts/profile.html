@@ -1,0 +1,11 @@
+{% if user.is_authenticated %} You are logged in as {{ user }}.
+<p><a href="{% url 'password_change' %}">Password Change</a></p>
+<form action="{% url 'logout' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Log Out</button>
+</form>
+{% else %} You are not logged in.
+<p><a href="{% url 'password_reset' %}">Password Reset</a></p>
+<a href="{% url 'login'%}">Click here to log in.</a>
+
+{% endif %}

@@ -1,5 +1,9 @@
 from django.urls import path
 from . import views
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth import views as auth_views
+
+
 
 urlpatterns = [
     path("", views.intro, name="intro"),
@@ -9,6 +13,7 @@ urlpatterns = [
     path("task/", views.task, name='task'),
     path("greeting/", views.greeting.as_view(), name="greeting"),
     # dynamic url with params (e.g /book/3/)
-    path("book/<int:id>", views.BookDetailView.as_view(), name='book_detail')
+    path("book/<int:id>/", views.BookDetailView.as_view(), name='book_detail'),
+   
 
 ]
