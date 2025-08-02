@@ -1,7 +1,9 @@
 from django.db import models
-from django.views.generic import CreateView
-from django.contrib.auth.forms import UserCreationForm
-from django.urls import reverse_lazy
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, Permission
+
+# from django.contrib.auth.backends import BaseBackend
+# from django.contrib.auth import get_user_model
+
 
 
 # Create your models here.
@@ -49,6 +51,14 @@ class ProductDetail(models.Model):
 
 class Student(models.Model):
     name = models.CharField(max_length=100)
+   
+    
+    class Meta:
+        permissions = [
+            ("can_approve_student", "can approve student"),
+            ("can_reject_student", "can reject student"),
+        ]
+
     def __str__(self):
         return self.name
 
@@ -102,6 +112,11 @@ class Book(models.Model):
     author = models.CharField(max_length=100)
     published_date = models.DateField()
 
+    class Meta:
+        permissions = [
+            ("can_approve_book", "Can approve book"),
+        ]
+
     def __str__(self):
         return self.title
 
@@ -115,3 +130,60 @@ class Book(models.Model):
 #     def __str__(self):
 #         return self.name
 
+# creating custom model with fields like dob and profile_picture
+
+class CustomBaseManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('Email firld is required')
+        user = self.model(email=self.normalize_email(email), **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+    
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        return self.create_user(email, password, **extra_fields)
+
+class CustomUser(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(unique=True)
+    full_name = models.CharField(max_length=255)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    date_of_birth = models.DateField()
+    profile_picture = models.ImageField(upload_to='profile_pictures/')
+
+    USERNAME_FIELD = 'email'
+
+    REQUIRED_FIELDS = ['date_of_birth']
+
+    objects = CustomBaseManager()
+
+
+
+
+    def __str__(self):
+        return self.email
+    
+# # creating custom backend
+# class CustomBackend(BaseBackend):
+#     def authenticate(self, request, email=None, password=None, **kwargs):
+#         User = get_user_model()
+
+#         # for username, without the **kwargs effect, replace the email with it
+#         # the kwargs allow for additional extensions like token and stuff
+#         try:
+#             user = User.objects.get(email=email)
+#             if user.check_password(password):
+#                 return user
+#         except User.DoesNotExist:
+#             return None
+    
+#     def get_user(self, user_id):
+#         User = get_user_model()
+
+#         try:
+#             return User.objects.get(pk=user_id)
+#         except User.DoesNotExist:
+#             return None

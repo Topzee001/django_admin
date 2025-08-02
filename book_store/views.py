@@ -2,17 +2,22 @@ from django.contrib import messages
 from django.http import HttpResponse
 # imports for function-based view
 from django.shortcuts import redirect, render
-from .models import Book
+from .models import Book, Student
 # import for class-based view
 from django.views.generic import TemplateView, DetailView, UpdateView
 from django.urls import reverse_lazy
 # passing view to template
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-# signup view imports
-from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
+from .forms import CustomUserCreationForm
+from django.contrib.auth.models import Permission
+from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.decorators import permission_required
+from django.shortcuts import render, get_object_or_404, redirect
+
 
 def intro(request):
     return HttpResponse("welcome to my book store.")
@@ -90,7 +95,7 @@ def profile_view(request):
 # signup view
 # authentication class
 class SignUpView(CreateView):
-    form_class = UserCreationForm
+    form_class = CustomUserCreationForm
     success_url = reverse_lazy('login')
     template_name= 'registration/signup.html'
 
@@ -102,12 +107,23 @@ class SignUpView(CreateView):
 
 def register(request):
      if request.method == 'POST':
-          form = UserCreationForm(request.POST)
+          form = CustomUserCreationForm(request.POST)
           if form.is_valid():
                form.save()
                return redirect('login') # redirect after successful registration
      else:
-          form = UserCreationForm()
+          form = CustomUserCreationForm()
      return render(request, 'registration/register.html', {'form': form})
 
+# User = get_user_model()
+# user = User.objects.get(email='tope@gmail.com')  # Change to target user
+# permission = Permission.objects.get(codename='can_approve_book')
+# user.user_permissions.add(permission)
+@permission_required('book_store.can_approve_student', raise_exception=True)
+def approve_student_view(request, student_id):
+    # student = get_object_or_404(Student, id=student_id)
+    # student.is_approved = True
+    # student.save()
+    # return redirect('student_list')  # or any page you want
+    return render(request, 'approve_student.html', {'student_id': student_id})
 

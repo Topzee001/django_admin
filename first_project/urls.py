@@ -20,11 +20,13 @@ from django.urls import path, include
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 from book_store.views import SignUpView, profile_view
+from first_project import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("books/", include("book_store.urls")),
+    path("", include("book_store.urls")),
     # Includes all auth URLs (login, logout, password reset, etc.)
     path('accounts/', include('django.contrib.auth.urls')),
     # A protected profile page view
@@ -37,5 +39,7 @@ urlpatterns = [
 
 # serve static files locally during development
 # for development only
-# if settings.DEBUG:
-#     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
